@@ -61,6 +61,24 @@ export const routes: RouteRecord[] = [
           },
         ],
       },
+      {
+        path: '/charts',
+        name: 'charts',
+        component: JumpView,
+        meta: {
+          title: '图表',
+        },
+        children: [
+          {
+            path: 'line-chart',
+            name: 'lineChart',
+            component: () => import('@/views/Charts/LineChart.vue'),
+            meta: {
+              title: '折线图',
+            },
+          },
+        ],
+      },
     ],
   },
 ];
