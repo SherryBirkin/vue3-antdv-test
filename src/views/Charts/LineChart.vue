@@ -1,9 +1,11 @@
 <script lang="ts" setup name="LineChart">
 import * as echarts from 'echarts';
+
 import { onMounted, onUnmounted, ref, unref, computed, watch } from 'vue';
 
 let myEchart = ref(null);
 let dayCount = ref(0);
+
 const xAxisNameList = computed(() => Array(dayCount.value).fill('').map((item, ind) => ind + 1));
 const valList = computed(() => Array(dayCount.value).fill('').map(
   () => Math.floor(100 - Math.random() * 50))
