@@ -1,25 +1,14 @@
 <script lang="ts" setup name="LineChart">
 import * as echarts from 'echarts';
-import { onMounted, onUnmounted, ref, computed } from 'vue';
+import { onMounted, onUnmounted, ref, unref, computed, watch } from 'vue';
 
-const myEcharts = echarts;
-const dayCount = ref(0);
+let myEchart = ref(null);
+let dayCount = ref(0);
 const xAxisNameList = computed(() => Array(dayCount.value).fill('').map((item, ind) => ind + 1));
 const valList = computed(() => Array(dayCount.value).fill('').map(
   () => Math.floor(100 - Math.random() * 50))
 );
-const getTargetDayCount = (targetMonth) => {
-  const date = new Date();
-
-  date.setMonth(targetMonth + 1);
-  date.setDate(0);
-  dayCount.value = date.getDate();
-};
-const initChart = () => {
-  const targetElem = document.querySelector('.chart-container');
-  const chart = myEcharts.init(targetElem);
-
-  chart.setOption({
+const chartOptions = computed(() => ({
     tooltip: {
       trigger: 'item',
       formatter: (params) => {
@@ -90,7 +79,26 @@ const initChart = () => {
       },
     ],
     //   color: this.lineColorList,
-  });
+}));
+
+watch(() => chartOptions, () => {
+  if (unref(myEchart)) {
+    myEchart.setOption(chartOptions.value);
+  }
+});
+
+const getTargetDayCount = (targetMonth) => {
+  const date = new Date();
+
+  date.setMonth(targetMonth + 1);
+  date.setDate(0);
+  dayCount.value = date.getDate();
+};
+const initChart = () => {
+  const targetElem = document.querySelector('.chart-container');
+
+  myEchart = echarts.init(targetElem);
+  myEchart.setOption(chartOptions.value);
 };
 
 onMounted(() => {
