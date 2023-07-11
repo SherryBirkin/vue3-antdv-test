@@ -3,13 +3,11 @@ import * as echarts from 'echarts';
 
 import { onMounted, onUnmounted, ref, unref, computed, watch } from 'vue';
 
-let myEchart = ref(null);
+let myChart = ref(null);
 let dayCount = ref(0);
+let valList = ref([]);
 
 const xAxisNameList = computed(() => Array(dayCount.value).fill('').map((item, ind) => ind + 1));
-const valList = computed(() => Array(dayCount.value).fill('').map(
-  () => Math.floor(100 - Math.random() * 50))
-);
 const chartOptions = computed(() => ({
     tooltip: {
       trigger: 'item',
@@ -31,7 +29,7 @@ const chartOptions = computed(() => ({
       data: xAxisNameList.value,
       axisLabel: {
         interval: 0,
-        rotate: 30,
+        rotate: 0,
         fontSize: 12,
       },
       axisLine: {
@@ -83,11 +81,11 @@ const chartOptions = computed(() => ({
     //   color: this.lineColorList,
 }));
 
-watch(() => chartOptions, () => {
-  if (unref(myEchart)) {
-    myEchart.setOption(chartOptions.value);
+watch(chartOptions, () => {
+  if (unref(myChart)) {
+    myChart.setOption(chartOptions.value);
   }
-});
+}, { deep: true });
 
 const getTargetDayCount = (targetMonth) => {
   const date = new Date();
@@ -96,20 +94,26 @@ const getTargetDayCount = (targetMonth) => {
   date.setDate(0);
   dayCount.value = date.getDate();
 };
+const getValList = () => {
+  valList.value = Array(dayCount.value).fill('').map(
+    () => Math.floor(100 - Math.random() * 50)
+  );
+};
 const initChart = () => {
   const targetElem = document.querySelector('.chart-container');
 
-  myEchart = echarts.init(targetElem);
-  myEchart.setOption(chartOptions.value);
+  myChart = echarts.init(targetElem);
+  myChart.setOption(chartOptions.value);
 };
 
 onMounted(() => {
   getTargetDayCount(new Date().getMonth());
+  getValList();
   initChart();
 });
 onUnmounted(() => {
-  if (myEcharts?.dispose) {
-    myEcharts.dispose();
+  if (myChart?.dispose) {
+    myChart.dispose();
   }
 });
 </script>
