@@ -1,10 +1,13 @@
-<script lang="ts" setup>
+<script lang="ts" setup name="LineChart">
 import * as echarts from 'echarts';
-import { onMounted, onUnmounted, computed } from 'vue';
+import { onMounted, onUnmounted, ref, computed } from 'vue';
 
 const myEcharts = echarts;
 const dayCount = ref(0);
-const xAxisNameList = computed(() => Array(dayCount).fill('').map((item, ind) => ind + 1));
+const xAxisNameList = computed(() => Array(dayCount.value).fill('').map((item, ind) => ind + 1));
+const valList = computed(() => Array(dayCount.value).fill('').map(
+  () => Math.floor(100 - Math.random() * 50))
+);
 const getTargetDayCount = (targetMonth) => {
   const date = new Date();
 
@@ -24,69 +27,69 @@ const initChart = () => {
 
         return `${dataIndex}: ${data}`;
       },
-      grid: {
-        containLabel: true,
-        top: '8px',
-        right: 0,
-        bottom: 0,
-        left: 0,
+    },
+    grid: {
+      containLabel: true,
+      top: '8px',
+      right: 0,
+      bottom: 0,
+      left: 0,
+    },
+    xAxis: {
+      type: 'category',
+      data: xAxisNameList.value,
+      axisLabel: {
+        interval: 0,
+        rotate: 30,
+        fontSize: 12,
       },
-      xAxis: {
-        type: 'category',
-        data: xAxisNameList,
-        axisLabel: {
-          interval: 0,
-          rotate: 30,
-          fontSize: 12,
-        },
-        axisLine: {
-          show: true,
-          lineStyle: {
-            // color: this.axisColor,
-            width: 1,
-          }
-        },
+      axisLine: {
+        show: true,
+        lineStyle: {
+          // color: this.axisColor,
+          width: 1,
+        }
       },
-      yAxis: {
-        type: 'value',
-        minInterval: 1,
-        min: 0,
-        max: null,
-        axisLine: {
-          show: true,
-          lineStyle: {
-            // color: this.axisColor,
-            width: 1,
-          }
-        },
-        splitLine: {
-          show: true,
-          lineStyle: {
-            color: this.splitLineColor,
-          }
-        },
-        splitNumber: 5,
+    },
+    yAxis: {
+      type: 'value',
+      minInterval: 1,
+      min: 0,
+      max: null,
+      axisLine: {
+        show: true,
+        lineStyle: {
+          // color: this.axisColor,
+          width: 1,
+        }
       },
-      series: [
-        {
-          data: [],
-          type: 'line',
-          smooth: true,
+      splitLine: {
+        show: true,
+        //   lineStyle: {
+        //     color: this.splitLineColor,
+        //   }
+      },
+      splitNumber: 5,
+    },
+    series: [
+      {
+        data: valList.value,
+        type: 'line',
+        smooth: true,
 
-          // 显示数值
-          itemStyle: {
-            normal: {
+        // 显示数值
+        itemStyle: {
+          normal: {
             label: {
               show: true,
-            //   color: this.valColor,
+             //   color: this.valColor,
             },
           },
         },
-        // areaStyle,
-        },
-      ],
+      // areaStyle,
+      },
+    ],
     //   color: this.lineColorList,
-    },
   });
 };
 
@@ -95,8 +98,9 @@ onMounted(() => {
   initChart();
 });
 onUnmounted(() => {
-    debugger;
-  myEcharts.dispose();
+  if (myEcharts?.dispose) {
+    myEcharts.dispose();
+  }
 });
 </script>
 
@@ -107,6 +111,7 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss" scoped>
-.line-chart {
+.chart-container {
+  height: 300px;
 }
 </style>
