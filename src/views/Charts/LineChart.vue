@@ -7,15 +7,19 @@ let myChart = ref(null);
 let dayCount = ref(0);
 let valList = ref([]);
 
-const xAxisNameList = computed(() => Array(dayCount.value).fill('').map((item, ind) => ind + 1));
+const xAxisNameList = computed(
+  () => Array(dayCount.value)
+    .fill('')
+    .map((item, ind) => `${ind + 1}号`)
+);
 const chartOptions = computed(() => ({
     tooltip: {
       trigger: 'item',
-      formatter: (params) => {
-        const { dataIndex, data } = { ...params };
+      // formatter: (params) => {
+      //   const { dataIndex, data } = { ...params };
 
-        return `${dataIndex}: ${data}`;
-      },
+      //   return `${dataIndex}: ${data}`;
+      // },
     },
     grid: {
       containLabel: true,
@@ -96,7 +100,7 @@ const getTargetDayCount = (targetMonth) => {
 };
 const getValList = () => {
   valList.value = Array(dayCount.value).fill('').map(
-    () => Math.floor(100 - Math.random() * 50)
+    () => Math.floor(100 - Math.random() * 70)
   );
 };
 const initChart = () => {
@@ -127,5 +131,7 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .chart-container {
   height: 300px;
+  margin: 0 10px;
+  padding: 20px 0;
 }
 </style>
