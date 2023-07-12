@@ -59,6 +59,14 @@ export const routes: RouteRecord[] = [
               title: '自动化测试',
             },
           },
+          {
+            path: 'reactive',
+            name: 'reactive',
+            component: () => import('@/views/Test/Reactive.vue'),
+            meta: {
+              title: '响应式',
+            },
+          },
         ],
       },
       {
